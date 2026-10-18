@@ -7,6 +7,6 @@ export default async function UserProfilePage({params}: any) {
             <p className="text-4xl">Profile Page
                 <span className="p-2 rounded ml-2 bg-orange-500 text-white">{id}</span>
             </p>
-        </div>
-    )
+        </div> 
+    );
 }
