@@ -1,20 +1,25 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
+import dns from "node:dns";
+
+dns.setServers(["8.8.8.8", "8.8.4.4"]);
+
+let isConnected = false;
 
 export async function connect() {
+    if (isConnected) {
+        return;
+    }
+
     try {
-        mongoose.connect(process.env.MONGO_URI!);
-        const connection = mongoose.connection;
-
-        connection.on('connected', () => {
-            console.log('MongoDB connected successfully');
-        })
-
-        connection.on('error', (err) => {
-            console.log('MongoDB connection error. Please make sure MongoDB is running.' + err);
-            process.exit();
-        })
-    } catch(error) {
-        console.log('Something goes wrong');
-        console.log(error);
+        console.log(
+            "MongoDB URI hostname:",
+            process.env.MONGO_URI?.split("@")[1]?.split("/")[0]
+        );
+        await mongoose.connect(process.env.MONGO_URI!);
+        isConnected = true;
+        console.log("MongoDB connected successfully");
+    } catch (error) {
+        console.error("MongoDB connection failed:", error);
+        throw error;
     }
 }
